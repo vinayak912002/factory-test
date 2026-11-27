@@ -27,9 +27,10 @@ fn ac_041__no_arguments_prints_help_to_stderr_and_exits_1() {
         .expect("tldr runs");
 
     assert_eq!(output.status.code(), Some(1));
+    let stderr = String::from_utf8_lossy(&output.stderr);
     assert!(
-        !output.stderr.is_empty(),
-        "stderr was empty; help must be printed to stderr"
+        stderr.contains("Usage:"),
+        "stderr was: {stderr:?}; help text (with a `Usage:` line) must be printed to stderr"
     );
     assert!(
         output.stdout.is_empty(),
@@ -44,7 +45,7 @@ fn ac_041__no_arguments_prints_help_to_stderr_and_exits_1() {
 fn ac_043__invalid_platform_flag_exits_2() {
     let output = Command::cargo_bin("tldr")
         .expect("tldr binary is built")
-        .args(["--platform", "invalid_plat", "ls"])
+        .args(["--platform", "invalid_plat"])
         .output()
         .expect("tldr runs");
 
