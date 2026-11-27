@@ -34,6 +34,13 @@ Lines marked (agent) are the agent's own notes; the others come from tool output
 - Cost: 0.0061 USD
 - Summary (agent): Reviewed TLDR-2 PR against AC-041/042/043 and BR-14/30/31, design sections and engineering rules; no blocking defects, two minor notes.
 
+### code_reviewer attempt 2: done
+
+- Session: `b19a1ff6-b34b-40ea-ada9-2beb27f25d01/TLDR-2/-/code_reviewer/2`
+- Commit: none
+- Cost: 0.0081 USD
+- Summary (agent): Reviewed TLDR-2 against AC-041/042/043, BR-14/30/31, design sections and engineering rules; no important defects, three minor notes.
+
 ## Task TLDR-3
 
 ### researcher attempt 1: failed
@@ -89,20 +96,6 @@ Lines marked (agent) are the agent's own notes; the others come from tool output
 - Session: `b19a1ff6-b34b-40ea-ada9-2beb27f25d01/TLDR-2/TLDR-4/implementer/1`
 - Commit: `e83134ef15c41b8796797e9e872aa776156128ca`
 - Files changed: `README.md`, `src/cli.rs`, `src/lib.rs`, `src/platform.rs`
-- Tests: `@AC-041` pass, `@AC-043` pass
-- Checks: build pass, lint pass, typecheck pass
-- Cost: 0.0080 USD
-- Summary (agent): Added VALID_PLATFORMS, the full clap Args surface with --platform validated (AC-043, BR-14), no-argument help to stderr with exit 1 (AC-041, BR-30), --print-completion notice with exit 0 (D-07), and a README usage section.
-- Decisions (agent):
-  - No-argument detection uses std::env::args_os().len() == 1 before Args::parse, so help is produced by run() rather than clap's own no-arg handling (BR-30).
-  - The no-argument path returns TldrError::NoArguments, so main also prints 'Error: no arguments given' to stderr; stdout stays empty (AC-041, BR-30). This follows the critic's note.
-  - README documents only implemented behaviour (no-arg help, --platform values, --version, --print-completion); positional command lookup is left undocumented (BR-14, D-07). Follows the critic's note.
-  - Other flags are parsed but not dispatched; their behaviour is left to later tasks.
-- Interfaces (agent):
-  - VALID_PLATFORMS: &[&str] in src/platform.rs
-  - pub mod platform in src/lib.rs
-  - Args in src/cli.rs: all design flags plus `command: Vec<String>`, with --platform validated against VALID_PLATFORMS
-  - run() -> anyhow::Result<()> in src/cli.rs: no-argument help and NoArguments error; --print-completion notice and Ok
 - Follow-ups (agent):
   - Per the critic's findings, the no-argument path prints both the help and an 'Error: no arguments given' line to stderr. Harmless for AC-041, but a later task could drop the extra line if it is unwanted.
   - The --version and --print-completion output is printed via println!; the design's Ctrl-C handler and the other flag behaviours are not implemented here.
